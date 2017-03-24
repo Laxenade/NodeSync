@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "ftp": "^0.3.10",
+        "hapi": "^16.1.0",
         "immutable": "^3.8.1",
         "node-schedule": "^1.2.1",
         "optimist": "^0.6.1",
