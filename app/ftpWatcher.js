@@ -184,6 +184,43 @@ var FtpWatcher = function () {
                 }
             });
         }
+    }, {
+        key: "listenBatch",
+        value: function listenBatch(path, interval, onInsertion, onDeletion) {
+            var _this7 = this;
+
+            return new Promise(function (resolve, reject) {
+                try {
+                    var job = schedule.scheduleJob("*/" + interval + " * * * * *", (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3() {
+                        return _regenerator2.default.wrap(function _callee3$(_context3) {
+                            while (1) {
+                                switch (_context3.prev = _context3.next) {
+                                    case 0:
+                                        _this7.ls(path).then(function (_) {
+                                            return _this7.fileComparator.compare(_);
+                                        }).then(function (files) {
+                                            onInsertion(List(files).filter(function (_) {
+                                                return _.state === "INSERTED";
+                                            }).toJS());
+                                            onDeletion(List(files).filter(function (_) {
+                                                return _.state === "DELETED";
+                                            }).toJS());
+                                        });
+
+                                    case 1:
+                                    case "end":
+                                        return _context3.stop();
+                                }
+                            }
+                        }, _callee3, _this7);
+                    })));
+
+                    resolve(job);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
     }]);
     return FtpWatcher;
 }();

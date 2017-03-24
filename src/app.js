@@ -16,7 +16,8 @@ function run() {
     const path = argv.path || "."
     const sync = argv.mode === "watch" ?
         ftpWatcher.watch(path, interval) :
-        ftpWatcher.listen(path, interval, _ => log.info(`Inserted: ${_.name}`), _ => log.info(`Deleted: ${_.name}`))
+        // ftpWatcher.listen(path, interval, _ => log.info(`Inserted: ${_.name}`), _ => log.info(`Deleted: ${_.name}`))
+        ftpWatcher.listenBatch(path, interval, _ => log.info(`Inserted: \n${JSON.stringify(_, null, 2)}`), _ => log.info(`Deleted: \n${JSON.stringify(_, null, 2)}`))
 
     Promise.all([
         ftpWatcher.init(config),

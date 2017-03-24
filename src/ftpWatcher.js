@@ -90,4 +90,21 @@ export default class FtpWatcher {
             }
         })
     }
+
+    listenBatch(path, interval, onInsertion, onDeletion) {
+        return new Promise((resolve, reject) => {
+            try {
+                const job = schedule.scheduleJob(`*/${interval} * * * * *`, async() => {
+                    this.ls(path).then(_ => this.fileComparator.compare(_)).then((files) => {
+                        onInsertion(List(files).filter(_ => _.state === "INSERTED").toJS())
+                        onDeletion(List(files).filter(_ => _.state === "DELETED").toJS())
+                    })
+                })
+
+                resolve(job)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
 }

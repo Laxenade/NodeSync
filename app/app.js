@@ -20,10 +20,12 @@ function run() {
 
     var interval = argv.interval || 10;
     var path = argv.path || ".";
-    var sync = argv.mode === "watch" ? ftpWatcher.watch(path, interval) : ftpWatcher.listen(path, interval, function (_) {
-        return log.info("Inserted: " + _.name);
+    var sync = argv.mode === "watch" ? ftpWatcher.watch(path, interval) :
+    // ftpWatcher.listen(path, interval, _ => log.info(`Inserted: ${_.name}`), _ => log.info(`Deleted: ${_.name}`))
+    ftpWatcher.listenBatch(path, interval, function (_) {
+        return log.info("Inserted: \n" + JSON.stringify(_, null, 2));
     }, function (_) {
-        return log.info("Deleted: " + _.name);
+        return log.info("Deleted: \n" + JSON.stringify(_, null, 2));
     });
 
     Promise.all([ftpWatcher.init(config), sync]).catch(function (error) {
