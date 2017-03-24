@@ -1,0 +1,36 @@
+{
+    "name": "nodesync",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app/app.js",
+    "scripts": {
+        "build": "babel src -d app",
+        "watch": "babel --watch src -d app",
+        "test": "node app/app.js --host speedtest.tele2.net",
+        "start": "npm run build && npm run test"
+    },
+    "author": "",
+    "license": "GPL",
+    "devDependencies": {
+        "babel-cli": "^6.24.0",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.2.2",
+        "babel-preset-latest": "^6.24.0",
+        "eslint": "^3.15.0",
+        "eslint-config-airbnb": "^14.1.0",
+        "eslint-plugin-import": "^2.2.0",
+        "eslint-plugin-jsx-a11y": "^4.0.0",
+        "eslint-plugin-react": "^6.9.0",
+        "immutable": "^3.8.1"
+    },
+    "dependencies": {
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-polyfill": "^6.23.0",
+        "ftp": "^0.3.10",
+        "immutable": "^3.8.1",
+        "node-schedule": "^1.2.1",
+        "optimist": "^0.6.1",
+        "underscore": "^1.8.3",
+        "winston": "^2.3.1"
+    }
+}
