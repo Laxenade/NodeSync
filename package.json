@@ -1,7 +1,7 @@
 {
     "name": "nodesync",
     "version": "1.0.0",
-    "description": "",
+    "description": "Constantly checking file changes on a remote FTP server",
     "main": "app/app.js",
     "scripts": {
         "build": "babel src -d app",
@@ -14,18 +14,16 @@
     "devDependencies": {
         "babel-cli": "^6.24.0",
         "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-polyfill": "^6.23.0",
         "babel-preset-env": "^1.2.2",
         "babel-preset-latest": "^6.24.0",
         "eslint": "^3.15.0",
         "eslint-config-airbnb": "^14.1.0",
         "eslint-plugin-import": "^2.2.0",
         "eslint-plugin-jsx-a11y": "^4.0.0",
-        "eslint-plugin-react": "^6.9.0",
-        "immutable": "^3.8.1"
+        "eslint-plugin-react": "^6.9.0"
     },
     "dependencies": {
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-polyfill": "^6.23.0",
         "ftp": "^0.3.10",
         "immutable": "^3.8.1",
         "node-schedule": "^1.2.1",
