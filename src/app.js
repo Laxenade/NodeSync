@@ -3,11 +3,12 @@ import FtpWatcher from "./ftpWatcher"
 const log = require("winston")
 const argv = require("optimist").argv
 const Hapi = require("hapi")
+const Inert = require("inert")
 
 function runByCmd() {
     const ftpWatcher = new FtpWatcher()
     const config = {
-        host: argv.host.replace("ftp://", "").slice(0, -1),
+        host: argv.host.replace("ftp://", ""),
         port: argv.port,
         user: argv.user,
         password: argv.password,
@@ -29,7 +30,7 @@ function runByCmd() {
 function runByEndpoint() {
     const ftpWatcher = new FtpWatcher()
     const config = {
-        host: argv.host.replace("ftp://", "").slice(0, -1),
+        host: argv.host.replace("ftp://", ""),
         port: argv.port,
         user: argv.user,
         password: argv.password,
@@ -50,6 +51,7 @@ function runByEndpoint() {
 
 function launchServer() {
     const server = new Hapi.Server()
+    server.register(Inert, () => {})
     server.connection({ port: 80, host: "localhost" })
 
     server.route({
@@ -63,10 +65,10 @@ function launchServer() {
                 return
             }
             const config = {
-                host: payload.host.replace("ftp://", "").slice(0, -1),
-                port: payload.port,
-                user: payload.user,
-                password: payload.password,
+                host: payload.host.replace("ftp://", ""),
+                port: payload.port === "" ? undefined : payload.port,
+                user: payload.user === "" ? undefined : payload.user,
+                password: payload.password === "" ? undefined : payload.password,
             }
             const interval = payload.interval || 10
             const path = payload.path || "/"
@@ -80,6 +82,14 @@ function launchServer() {
                 sync,
             ]).catch(error => log.error(error))
             reply(JSON.stringify({ res: "success" }))
+        },
+    })
+
+    server.route({
+        method: "GET",
+        path: "/",
+        handler: {
+            file: "static/index.html",
         },
     })
 

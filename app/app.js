@@ -9,11 +9,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var log = require("winston");
 var argv = require("optimist").argv;
 var Hapi = require("hapi");
+var Inert = require("inert");
 
 function runByCmd() {
     var ftpWatcher = new _ftpWatcher2.default();
     var config = {
-        host: argv.host.replace("ftp://", "").slice(0, -1),
+        host: argv.host.replace("ftp://", ""),
         port: argv.port,
         user: argv.user,
         password: argv.password
@@ -37,7 +38,7 @@ function runByCmd() {
 function runByEndpoint() {
     var ftpWatcher = new _ftpWatcher2.default();
     var config = {
-        host: argv.host.replace("ftp://", "").slice(0, -1),
+        host: argv.host.replace("ftp://", ""),
         port: argv.port,
         user: argv.user,
         password: argv.password
@@ -60,6 +61,7 @@ function runByEndpoint() {
 
 function launchServer() {
     var server = new Hapi.Server();
+    server.register(Inert, function () {});
     server.connection({ port: 80, host: "localhost" });
 
     server.route({
@@ -73,10 +75,10 @@ function launchServer() {
                 return;
             }
             var config = {
-                host: payload.host.replace("ftp://", "").slice(0, -1),
-                port: payload.port,
-                user: payload.user,
-                password: payload.password
+                host: payload.host.replace("ftp://", ""),
+                port: payload.port === "" ? undefined : payload.port,
+                user: payload.user === "" ? undefined : payload.user,
+                password: payload.password === "" ? undefined : payload.password
             };
             var interval = payload.interval || 10;
             var path = payload.path || "/";
@@ -91,6 +93,14 @@ function launchServer() {
                 return log.error(error);
             });
             reply(JSON.stringify({ res: "success" }));
+        }
+    });
+
+    server.route({
+        method: "GET",
+        path: "/",
+        handler: {
+            file: "static/index.html"
         }
     });
 
